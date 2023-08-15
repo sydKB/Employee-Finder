@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const fs = require('fs');
+const e = require('express');
 
 // initial function that prompts the user. reused after every action until the user selects EXIT
 function handleOptions() {
@@ -54,27 +55,27 @@ function handleOptions() {
 }
 
 // **** query functions used to access table data ****
-async function queryDepartments() {
+function queryDepartments() {
     return new Promise((resolve, reject) => {
-        db.query("select * from departments", function (err, res){
+        db.query("SELECT * FROM departments", function (err, res){
             if(err) reject(err);
             resolve(res);
         });
     });
 }
 
-async function queryRoles() {
+function queryRoles() {
     return new Promise((resolve, reject) => {
-        db.query("select * from roles", function (err, res){
+        db.query("SELECT * FROM roles", function (err, res){
             if(err) reject(err);
             resolve(res);
         });
     });
 }
 
-async function queryEmployees() {
+function queryEmployees() {
     return new Promise((resolve, reject) => {
-        db.query("select * from employees", function (err, res){
+        db.query("SELECT * FROM employees", function (err, res){
             if(err) reject(err);
             resolve(res);
         });
@@ -82,24 +83,24 @@ async function queryEmployees() {
 }
 
 // **** display functions used to print data ****
-async function displayDepts() {
-    db.query("select * from departments", function (req, res){
+function displayDepts() {
+    db.query("SELECT * FROM departments", function (req, res){
         console.log("All departments...");
         console.table(res);
     });
     handleOptions();
 }
 
-async function displayRoles() {
-    db.query("select * from roles", function (req, res){
+function displayRoles() {
+    db.query("SELECT * FROM roles", function (req, res){
         console.log("All roles...");
         console.table(res);
     });
     handleOptions();
 }
 
-async function displayEmployees() {
-    db.query("select * from employees", function (req, res){
+function displayEmployees() {
+    db.query("SELECT * FROM employees", function (req, res){
         console.log("All employees...");
         console.table(res);
     });
@@ -107,7 +108,7 @@ async function displayEmployees() {
 }
 
 // adding a department name to the department table
-async function addDept() {
+function addDept() {
     inquirer.prompt({
         type: "input",
         name: "departmentName",
@@ -141,7 +142,7 @@ async function addRole() {
             type: "list",
             name: "departmentId",
             message: "Select the department:",
-            choices: departments.map((departments)=>({name: departments.name, value: departments.id}))
+            choices: departments.map((department)=>({name: department.name, value: department.id}))
         }
     ])
     .then((answer)=>{
@@ -179,7 +180,7 @@ async function addEmployee() {
             type: "list",
             name: "roleId",
             message: "Select the role:",
-            choices: roles.map((roles)=>({name: roles.title, value: roles.id}))
+            choices: roles.map((role)=>({name: role.title, value: role.id}))
         },
         {
             type: "input",
@@ -203,8 +204,49 @@ async function addEmployee() {
     }); 
 }
 
+async function updateRole() {
+    const employees = await queryEmployees();
+    const roles = await queryRoles();
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "employee",
+            message: "Select the employee whose role you'd like to change:",
+            choices: employees.map((employee)=>({
+                name: employee.first_name + " " + employee.last_name, 
+                value: employee.id
+            }))
+        },
+        {
+            type: "list",
+            name: "newRole",
+            message: "Select the new role for this employee:",
+            choices: roles.map((role)=>({name: role.title, value: role.id}))
+        }
+    ]).then((answer)=>{
+        console.log(answer);
+        console.log(answer.newRole);
+        db.query("UPDATE employees SET ? WHERE ?", 
+        [
+            {
+                role_id: answer.newRole,
+            },
+            {
+                id: answer.employee,
+            },
+        ],
+        function (err) {
+            if (err) throw err;
+            console.log("Employee successfully updated!");
+            handleOptions();
+        });
+    }); 
+}
+
+// initial call to begin the prompting.
 handleOptions();
 
+// creates a connection to the sql database
 const db = mysql.createConnection(
     {
       host: 'localhost', //'127.0.0.1',

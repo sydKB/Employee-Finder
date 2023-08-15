@@ -25,5 +25,3 @@ CREATE TABLE employees (
     manager_id INT NOT NULL,
     PRIMARY KEY(id)
 );
--- ^role_id hold ref to other emp that is  manager of current emp
-
