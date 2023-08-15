@@ -22,26 +22,35 @@ function handleOptions() {
         choices: options
     }])
     .then(selection => {
-        //console.info(selection.initialCommand);
-        if (selection.initialCommand == 'View all departments') { 
-            displayDepts(); 
-        } else if (selection.initialCommand == 'View all roles') {
-            displayRoles();
-        } else if (selection.initialCommand == 'View all employees') {
-            displayEmployees();
-        } else if (selection.initialCommand == 'Add a department') {
-            addDept();
-        } else if (selection.initialCommand == 'Add a role') {
-            addRole();
-        } else if (selection.initialCommand == 'Add an employee') {
-            addEmployee();
-        } else if (selection.initialCommand == 'Update an employee role') {
-            updateRole();
-        } else {
-            console.log('Goodbye!');
-            db.end();
+        switch (selection.initialCommand) {
+            case 'View all departments':
+                displayDepts();
+                break;
+            case 'View all roles':
+                displayRoles();
+                break;
+            case 'View all employees':
+                displayEmployees();
+                break;
+            case 'Add a department':
+                addDept();
+                break;
+            case 'Add a role':
+                addRole();
+                break;
+            case 'Add an employee':
+                addEmployee();
+                break;
+            case 'Update an employee role':
+                updateRole();
+                break;
+            default:
+                console.log('Goodbye!');
+                db.end();
+                break;
         }
-    });   
+    });
+    
 }
 
 // **** query functions used to access table data ****
