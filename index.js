@@ -114,7 +114,6 @@ function addDept() {
         name: "departmentName",
         message: "Enter the department name:"
     }).then((answer)=>{
-        console.log(answer.departmentName);
         db.query("INSERT INTO departments (name) VALUES (?)", [answer.departmentName],
         function (err) {
             if (err) throw err;
@@ -146,7 +145,6 @@ async function addRole() {
         }
     ])
     .then((answer)=>{
-        console.log(answer);
         db.query("INSERT INTO roles SET ?", 
         {
             title: answer.roleTitle,
@@ -164,7 +162,6 @@ async function addRole() {
 // same as the function before, but adding an employee with a role 
 async function addEmployee() {
     const roles = await queryRoles();
-    console.log(roles);
     inquirer.prompt([
         {
             type: "input",
@@ -188,7 +185,6 @@ async function addEmployee() {
             message: "Enter the manager id:"
         }
     ]).then((answer)=>{
-        console.log(answer);
         db.query("INSERT INTO employees SET ?", 
         {
             first_name: answer.firstName,
@@ -224,8 +220,6 @@ async function updateRole() {
             choices: roles.map((role)=>({name: role.title, value: role.id}))
         }
     ]).then((answer)=>{
-        console.log(answer);
-        console.log(answer.newRole);
         db.query("UPDATE employees SET ? WHERE ?", 
         [
             {
