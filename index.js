@@ -1,7 +1,5 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const fs = require('fs');
-const e = require('express');
 
 // initial function that prompts the user. reused after every action until the user selects EXIT
 function handleOptions() {
@@ -200,6 +198,7 @@ async function addEmployee() {
     }); 
 }
 
+// updates chosen employee's role in the database
 async function updateRole() {
     const employees = await queryEmployees();
     const roles = await queryRoles();

@@ -4,9 +4,8 @@
 
 This is a command-line application that manages a company's employee database, using Node.js, Inquirer, and MySQL. It has functions that display and add departments, employees and roles. You can also update employee roles. 
 
-```
+- - -
 Click the following image to watch the tutorial:
-```
 [![A video thumbnail shows a walkthrough video of the applications and its functions.](./Assets/tutorial-thumbnail.png)](https://watch.screencastify.com/v/tekDmbNTadsxzHviN0tB)
 
 <details>
